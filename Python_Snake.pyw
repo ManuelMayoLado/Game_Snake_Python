@@ -24,7 +24,7 @@ LADO_VENTANA = (N_CADROS * lado_cadrado) + (MARCO * 2)
 
 TICKS_SEGUNDO = 60
 
-MOVEMENTOS_SEGUNDO = 10 #MOVEMNETOS POR SEGUNDO
+MOVEMENTOS_SEGUNDO = 10 #MOVEMENTOS POR SEGUNDO
 
 FRECUENCIA = TICKS_SEGUNDO / MOVEMENTOS_SEGUNDO
 
@@ -121,7 +121,7 @@ while ON:
 			GAME_OVER = True
 		for i in lista_cola:
 			if p_serpe.punto.x == i.x and p_serpe.punto.y == i.y:
-				GAME_OVER = False
+				GAME_OVER = True
 				
 		#COME?
 		if not GAME_OVER:
