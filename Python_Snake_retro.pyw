@@ -75,7 +75,7 @@ while ON:
 	#LIMPIAR PANTALLA:
 	
 	if not GAME_OVER:
-		ventana.fill((0,0,0))
+		ventana.fill((255,255,255))
 	elif len(lista_cola)+1 == N_CADROS * N_CADROS:
 		ventana.fill((0,0,200))
 	else:
@@ -83,7 +83,7 @@ while ON:
 	
 	#DEBUXAR ELEMENTOS:
 	
-	pygame.draw.rect(ventana, (255,255,255), imag_rect_xogo)
+	pygame.draw.rect(ventana, (0,0,0), imag_rect_xogo)
 	
 	if Cadricula == True:
 		for i in range(MARCO, LADO_VENTANA, lado_cadrado):
