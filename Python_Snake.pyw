@@ -28,13 +28,20 @@ p_serpe = serpe(punto(MARCO, MARCO), "dereita")
 
 lista_cola = []
 
+pygame.init() #INICIAR PYGAME
+
 def crear_punto_comida():
-	p = punto((random.randint(MARCO,ANCHO_VENTANA-(LADO_CADRADO+MARCO))),((random.randint(MARCO,ANCHO_VENTANA-(LADO_CADRADO+MARCO)))))
+	lista_rect = []
+	for i in lista_cola:
+		lista_rect.append(pygame.Rect(i.x,i.y,LADO_CADRADO,LADO_CADRADO))
+	while True:
+		p = punto((random.randint(MARCO,ANCHO_VENTANA-(LADO_CADRADO+MARCO))),((random.randint(MARCO,ANCHO_VENTANA-(LADO_CADRADO+MARCO)))))
+		rectangulo = pygame.Rect(p.x, p.y, LADO_CADRADO, LADO_CADRADO)
+		if rectangulo.collidelist(lista_rect) == -1:
+			break
 	return p
 	
 punto_comida = crear_punto_comida()
-
-pygame.init() #INICIAR PYGAME
 
 ventana = pygame.display.set_mode([ANCHO_VENTANA, ALTO_VENTANA])
 pygame.display.set_caption("Python_Snake")
@@ -71,6 +78,10 @@ while ON:
 	
 	rect_serpe = pygame.Rect(p_serpe.punto.x, p_serpe.punto.y, LADO_CADRADO, LADO_CADRADO)
 	pygame.draw.rect(ventana, (50,color_verde,0), rect_serpe)
+	
+	#covertir lista_cola en unha lista con menos rectangulos.
+	
+	lista_rect_pintados = []
 	
 	for i in lista_cola:
 		rect_cola = pygame.Rect(i.x, i.y, LADO_CADRADO, LADO_CADRADO)
