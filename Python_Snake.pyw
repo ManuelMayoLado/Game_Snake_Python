@@ -56,6 +56,10 @@ ON = True
 
 GAME_OVER = False
 
+bucle_on = 0
+
+espacio_pulsado = False
+
 while ON:
 
 	reloj = pygame.time.Clock()
@@ -76,18 +80,17 @@ while ON:
 	
 	color_verde = 170
 	
+	if bucle_on == 1:
+		rect_serpe_ant = rect_serpe
+		
 	rect_serpe = pygame.Rect(p_serpe.punto.x, p_serpe.punto.y, LADO_CADRADO, LADO_CADRADO)
 	pygame.draw.rect(ventana, (50,color_verde,0), rect_serpe)
 	
-	#covertir lista_cola en unha lista con menos rectangulos.
-	
-	lista_rect_pintados = []
-	
-	for i in lista_cola:
-		rect_cola = pygame.Rect(i.x, i.y, LADO_CADRADO, LADO_CADRADO)
-		pygame.draw.rect(ventana, (50,color_verde,0), rect_cola)
-		if color_verde >= 100:
-			color_verde -= 1
+	#for i in lista_cola:
+	#	rect_cola = pygame.Rect(i.x, i.y, LADO_CADRADO, LADO_CADRADO)
+	#	pygame.draw.rect(ventana, (50,color_verde,0), rect_cola)
+	#	if color_verde >= 100:
+	#		color_verde -= 1
 
 	#ACCIÓNS SERPE:
 
@@ -135,7 +138,16 @@ while ON:
 		
 	#UPDATE:
 	
-	pygame.display.update()
+	if bucle_on == 0 or GAME_OVER or espacio_pulsado or comeu == (LADO_CADRADO/VELOCIDADE_SERPE)-1:
+		pygame.display.update()
+	elif len(lista_cola) > 0:
+		pygame.display.update([rect_serpe, pygame.Rect(lista_cola[-1].x, lista_cola[-1].y,LADO_CADRADO, LADO_CADRADO)])
+	else:
+		pygame.display.update([rect_serpe, rect_serpe_ant])
+	
+	
+	if espacio_pulsado:
+		espacio_pulsado = False
 	
 	#EVENTOS - KEYDOWN and EXIT:
 	
@@ -151,6 +163,7 @@ while ON:
 				p_serpe = serpe(punto(MARCO, MARCO), "dereita")
 				proximo_movemento = "dereita"
 				lista_cola = []
+				espacio_pulsado = True
 			elif eventos.key == K_UP and not GAME_OVER and not p_serpe.mov == "abaixo":
 				proximo_movemento = "arriba"
 			elif eventos.key == K_DOWN and not GAME_OVER and not p_serpe.mov == "arriba":
@@ -161,3 +174,5 @@ while ON:
 				proximo_movemento = "esquerda"
 				
 	reloj.tick(TICKS_SEGUNDO)
+	
+	bucle_on = 1
