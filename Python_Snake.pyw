@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+#NON OPERATIVO
+
 import random
 import pygame
 from pygame.locals import *
