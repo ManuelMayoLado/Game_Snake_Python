@@ -118,12 +118,12 @@ while ON:
 	#COME?
 	
 	if not GAME_OVER:
-		lista_cola.insert(0, p_serpe.punto)
+		#lista_cola.insert(0, p_serpe.punto)
 		if rect_serpe.colliderect(rect_comida):
 			comeu = LADO_CADRADO / VELOCIDADE_SERPE
 			punto_comida = crear_punto_comida()
-		if comeu == 0:
-			del lista_cola[len(lista_cola)-1]
+		#if comeu == 0:
+		#	del lista_cola[len(lista_cola)-1]
 			
 		
 	#MOVEMENTO
@@ -140,12 +140,7 @@ while ON:
 		
 	#UPDATE:
 	
-	if bucle_on == 0 or GAME_OVER or espacio_pulsado or comeu == (LADO_CADRADO/VELOCIDADE_SERPE)-1:
-		pygame.display.update()
-	elif len(lista_cola) > 0:
-		pygame.display.update([rect_serpe, pygame.Rect(lista_cola[-1].x, lista_cola[-1].y,LADO_CADRADO, LADO_CADRADO)])
-	else:
-		pygame.display.update([rect_serpe, rect_serpe_ant])
+	pygame.display.update()
 	
 	
 	if espacio_pulsado:
