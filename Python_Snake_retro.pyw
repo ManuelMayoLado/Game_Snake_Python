@@ -28,9 +28,9 @@ MOVEMENTOS_SEGUNDO = 10 #MOVEMENTOS POR SEGUNDO
 
 FRECUENCIA = TICKS_SEGUNDO / MOVEMENTOS_SEGUNDO
 
-p_serpe = serpe(punto(MARCO, MARCO), "dereita")
+p_serpe = serpe(punto(MARCO+lado_cadrado*2, MARCO), "dereita")
 
-lista_cola = []
+lista_cola = [punto(MARCO+lado_cadrado,MARCO),punto(MARCO,MARCO)]
 
 def crear_punto_comida():
 	global lista_cola
@@ -170,13 +170,13 @@ while ON:
 				proximo_movemento = "dereita"
 				lista_cola = []
 				cont_frecuencia = 0
-			elif eventos.key == K_UP and not GAME_OVER and not p_serpe.mov == "abaixo":
+			elif (eventos.key == K_UP or eventos.key == K_w) and not GAME_OVER and not p_serpe.mov == "abaixo":
 				proximo_movemento = "arriba"
-			elif eventos.key == K_DOWN and not GAME_OVER and not p_serpe.mov == "arriba":
+			elif (eventos.key == K_DOWN or eventos.key == K_s) and not GAME_OVER and not p_serpe.mov == "arriba":
 				proximo_movemento = "abaixo"
-			elif eventos.key == K_RIGHT and not GAME_OVER and not p_serpe.mov == "esquerda":
+			elif (eventos.key == K_RIGHT or eventos.key == K_d) and not GAME_OVER and not p_serpe.mov == "esquerda":
 				proximo_movemento = "dereita"
-			elif eventos.key == K_LEFT and not GAME_OVER and not p_serpe.mov == "dereita":
+			elif (eventos.key == K_LEFT or eventos.key == K_a) and not GAME_OVER and not p_serpe.mov == "dereita":
 				proximo_movemento = "esquerda"
 				
 	cont_frecuencia += 1

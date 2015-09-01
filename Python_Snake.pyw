@@ -20,7 +20,7 @@ MARCO = 5
 
 LADO_CADRADO = 10
 
-VELOCIDADE_SERPE = 2.5
+VELOCIDADE_SERPE = 2
 
 ANCHO_VENTANA = ALTO_VENTANA = 300
 
@@ -122,25 +122,32 @@ while ON:
 		if rect_serpe.colliderect(rect_comida):
 			comeu = LADO_CADRADO / VELOCIDADE_SERPE
 			punto_comida = crear_punto_comida()
+			pygame.display.update()
 		#if comeu == 0:
 		#	del lista_cola[len(lista_cola)-1]
 			
 		
 	#MOVEMENTO
 	
-		if not GAME_OVER:
-			if p_serpe.mov == "dereita":
-				p_serpe = serpe(punto(p_serpe.punto.x+VELOCIDADE_SERPE,p_serpe.punto.y), p_serpe.mov)
-			elif p_serpe.mov == "esquerda":
-				p_serpe = serpe(punto(p_serpe.punto.x-VELOCIDADE_SERPE,p_serpe.punto.y), p_serpe.mov)
-			elif p_serpe.mov == "arriba":
-				p_serpe = serpe(punto(p_serpe.punto.x,p_serpe.punto.y-VELOCIDADE_SERPE), p_serpe.mov)
-			elif p_serpe.mov == "abaixo":
-				p_serpe = serpe(punto(p_serpe.punto.x,p_serpe.punto.y+VELOCIDADE_SERPE), p_serpe.mov)
-		
+	p_serpe_anterior = punto(p_serpe.punto.x,p_serpe.punto.y)
+	rectangulo_serpe_anterior = pygame.Rect(p_serpe_anterior.x,p_serpe_anterior.y,LADO_CADRADO,LADO_CADRADO)
+
+	if not GAME_OVER:
+		if p_serpe.mov == "dereita":
+			p_serpe = serpe(punto(p_serpe.punto.x+VELOCIDADE_SERPE,p_serpe.punto.y), p_serpe.mov)
+		elif p_serpe.mov == "esquerda":
+			p_serpe = serpe(punto(p_serpe.punto.x-VELOCIDADE_SERPE,p_serpe.punto.y), p_serpe.mov)
+		elif p_serpe.mov == "arriba":
+			p_serpe = serpe(punto(p_serpe.punto.x,p_serpe.punto.y-VELOCIDADE_SERPE), p_serpe.mov)
+		elif p_serpe.mov == "abaixo":
+			p_serpe = serpe(punto(p_serpe.punto.x,p_serpe.punto.y+VELOCIDADE_SERPE), p_serpe.mov)
+	
 	#UPDATE:
 	
-	pygame.display.update()
+	if not bucle_on:
+		pygame.display.update()
+	else:
+		pygame.display.update(rectangulo_serpe_anterior)
 	
 	
 	if espacio_pulsado:
@@ -160,14 +167,15 @@ while ON:
 				p_serpe = serpe(punto(MARCO, MARCO), "dereita")
 				proximo_movemento = "dereita"
 				lista_cola = []
+				pygame.display.update()
 				espacio_pulsado = True
-			elif eventos.key == K_UP and not GAME_OVER and not p_serpe.mov == "abaixo":
+			elif (eventos.key == K_UP or eventos.key == K_w) and not GAME_OVER and not p_serpe.mov == "abaixo":
 				proximo_movemento = "arriba"
-			elif eventos.key == K_DOWN and not GAME_OVER and not p_serpe.mov == "arriba":
+			elif (eventos.key == K_DOWN or eventos.key == K_s) and not GAME_OVER and not p_serpe.mov == "arriba":
 				proximo_movemento = "abaixo"
-			elif eventos.key == K_RIGHT and not GAME_OVER and not p_serpe.mov == "esquerda":
+			elif (eventos.key == K_RIGHT or eventos.key == K_d) and not GAME_OVER and not p_serpe.mov == "esquerda":
 				proximo_movemento = "dereita"
-			elif eventos.key == K_LEFT and not GAME_OVER and not p_serpe.mov == "dereita":
+			elif (eventos.key == K_LEFT or eventos.key == K_a) and not GAME_OVER and not p_serpe.mov == "dereita":
 				proximo_movemento = "esquerda"
 				
 	reloj.tick(TICKS_SEGUNDO)
