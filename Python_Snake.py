@@ -14,23 +14,27 @@ class serpe:
 		self.punto = punto
 		self.mov = mov
 
-MARCO = 5
+MARCO_SUP = 30
+MARCO = 10
 
 N_CADROS = 30 #POR FILA
 
-lado_cadrado = 10
+lado_cadrado = 15
 
 LADO_VENTANA = (N_CADROS * lado_cadrado) + (MARCO * 2)
+ALTO_VENTANA = (N_CADROS * lado_cadrado) + (MARCO + MARCO_SUP)
 
 TICKS_SEGUNDO = 60
 
 MOVEMENTOS_SEGUNDO = 8 #MOVEMENTOS POR SEGUNDO
 
-FRECUENCIA = TICKS_SEGUNDO / MOVEMENTOS_SEGUNDO
+FRECUENCIA = int(TICKS_SEGUNDO / MOVEMENTOS_SEGUNDO)
 
-p_serpe = serpe(punto(MARCO+lado_cadrado*2, MARCO), "dereita")
+score = 0
 
-lista_cola = [punto(MARCO+lado_cadrado,MARCO),punto(MARCO,MARCO)]
+p_serpe = serpe(punto(MARCO+lado_cadrado*2, MARCO_SUP), "dereita")
+
+lista_cola = [punto(MARCO+lado_cadrado,MARCO_SUP),punto(MARCO,MARCO_SUP)]
 
 def crear_punto_comida():
 	global lista_cola
@@ -38,7 +42,8 @@ def crear_punto_comida():
 	lista.insert(0, p_serpe.punto)
 	correcto = False
 	while not correcto:
-		p = punto(((random.randint(0,N_CADROS-1))*lado_cadrado)+MARCO,((random.randint(0,N_CADROS-1))*lado_cadrado)+MARCO)
+		p = punto(((random.randint(0,N_CADROS-1))*lado_cadrado)+MARCO,
+				  ((random.randint(0,N_CADROS-1))*lado_cadrado)+MARCO_SUP)
 		c = 0
 		for i in lista:
 			c += 1
@@ -53,10 +58,12 @@ punto_comida = crear_punto_comida()
 
 pygame.init() #INICIAR PYGAME
 
-ventana = pygame.display.set_mode([LADO_VENTANA, LADO_VENTANA],0,32)
+ventana = pygame.display.set_mode([LADO_VENTANA, ALTO_VENTANA],0,32)
 pygame.display.set_caption("Python_Snake")
 
-imag_rect_xogo = pygame.Rect(MARCO,MARCO,LADO_VENTANA-(MARCO*2),LADO_VENTANA-(MARCO*2))
+font_score = pygame.font.SysFont("System", int(LADO_VENTANA/20))
+
+imag_rect_xogo = pygame.Rect(MARCO,MARCO_SUP,LADO_VENTANA-(MARCO*2),ALTO_VENTANA-(MARCO+MARCO_SUP))
 
 proximo_movemento = "dereita"
 
@@ -75,31 +82,42 @@ while ON:
 	#LIMPIAR PANTALLA:
 	
 	if not GAME_OVER:
-		ventana.fill((255,255,255))
+		#ventana.fill((255,255,255))
+		ventana.fill((220,220,220))
 	elif len(lista_cola)+1 == N_CADROS * N_CADROS:
 		ventana.fill((0,0,200))
 	else:
-		ventana.fill((255,0,0))
+		ventana.fill((200,0,0))
 	
 	#DEBUXAR ELEMENTOS:
 	
 	pygame.draw.rect(ventana, (0,0,0), imag_rect_xogo)
 	
+	text_score = font_score.render(("SCORE: "+str(score)),True,[0,0,0])
+	ventana.blit(text_score,[int(MARCO_SUP/4),int(MARCO_SUP/4)])
+	
 	if Cadricula == True:
-		for i in range(MARCO, LADO_VENTANA, lado_cadrado):
-			pygame.draw.line(ventana, (100,100,100), (MARCO, i), (LADO_VENTANA-MARCO, i))
-			pygame.draw.line(ventana, (100,100,100), (i, MARCO), (i, LADO_VENTANA-MARCO))
+		for i in range(MARCO, LADO_VENTANA-(MARCO), lado_cadrado):
+			pygame.draw.line(ventana, (200,60,60), (i, MARCO_SUP), (i, ALTO_VENTANA-MARCO))
+		for i in range(MARCO_SUP, ALTO_VENTANA-MARCO, lado_cadrado):
+			pygame.draw.line(ventana, (200,60,60), (MARCO, i), (LADO_VENTANA-MARCO, i))
 		
 	rect_comida = pygame.Rect(punto_comida.x, punto_comida.y, lado_cadrado, lado_cadrado)
-	
+		
 	pygame.draw.rect(ventana, (180,180,50), rect_comida)
 	
 	rect_serpe = pygame.Rect(p_serpe.punto.x, p_serpe.punto.y, lado_cadrado, lado_cadrado)
-	pygame.draw.rect(ventana, (0,110,0), rect_serpe)
+	
+	pygame.draw.rect(ventana, (50,130,50), rect_serpe)
 		
 	for i in lista_cola:
 		rect_cola = pygame.Rect(i.x, i.y, lado_cadrado, lado_cadrado)
 		pygame.draw.rect(ventana, (0,110,0), rect_cola)
+		if Cadricula:
+			pygame.draw.rect(ventana, (60,60,60), rect_cola,1)
+		else:
+			pygame.draw.rect(ventana, (0,0,0), rect_cola,1)
+			
 	
 	#ACCIÓNS SERPE:
 	
@@ -108,14 +126,10 @@ while ON:
 		p_serpe = serpe(p_serpe.punto, proximo_movemento)
 
 		#GAME OVER?
-	
-		if p_serpe.punto.x < MARCO or p_serpe.punto.x > LADO_VENTANA-(MARCO+lado_cadrado):
-			GAME_OVER = True
-		if p_serpe.punto.y < MARCO or p_serpe.punto.y > LADO_VENTANA-(MARCO+lado_cadrado):
-			GAME_OVER = True
+		
 		if (p_serpe.punto.x <= MARCO and p_serpe.mov == "esquerda") or (p_serpe.punto.x >= LADO_VENTANA-(MARCO+lado_cadrado) and p_serpe.mov == "dereita"):
 			GAME_OVER = True
-		if (p_serpe.punto.y <= MARCO and p_serpe.mov == "arriba") or (p_serpe.punto.y >= LADO_VENTANA-(MARCO+lado_cadrado) and p_serpe.mov == "abaixo"):
+		if (p_serpe.punto.y <= MARCO_SUP and p_serpe.mov == "arriba") or (p_serpe.punto.y >= ALTO_VENTANA-(MARCO+lado_cadrado) and p_serpe.mov == "abaixo"):
 			GAME_OVER = True
 		if len(lista_cola)+1 == N_CADROS * N_CADROS:
 			GAME_OVER = True
@@ -130,10 +144,10 @@ while ON:
 				del lista_cola[len(lista_cola)-1]
 			else:
 				COME = True
+				score += 5
 				punto_comida = crear_punto_comida()
 		
 		#MOVEMENTO
-	
 			if not GAME_OVER:
 				if p_serpe.mov == "dereita":
 					p_serpe = serpe(punto(p_serpe.punto.x+lado_cadrado,p_serpe.punto.y), p_serpe.mov)
@@ -166,10 +180,11 @@ while ON:
 					Cadricula = True
 			elif eventos.key == K_SPACE and GAME_OVER:
 				GAME_OVER = False
-				p_serpe = serpe(punto(MARCO, MARCO), "dereita")
+				p_serpe = serpe(punto(MARCO + lado_cadrado * 2, MARCO_SUP), "dereita")
 				proximo_movemento = "dereita"
-				lista_cola = []
+				lista_cola = [punto(MARCO + lado_cadrado, MARCO_SUP), punto(MARCO, MARCO_SUP)]
 				cont_frecuencia = 0
+				score = 0
 			elif (eventos.key == K_UP or eventos.key == K_w) and not GAME_OVER and not p_serpe.mov == "abaixo":
 				proximo_movemento = "arriba"
 			elif (eventos.key == K_DOWN or eventos.key == K_s) and not GAME_OVER and not p_serpe.mov == "arriba":
